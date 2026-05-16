@@ -207,6 +207,15 @@ Put your images here:
 "keyword_search": "Keyword Search",
 "ml_search": "ML Search",
 "ml_search_note": "ML Search uses TF-IDF similarity to find closer references.",
+
+"clip_search_title": "🖼️ CLIP Image Search",
+"clip_search_description": "Search your clothing images using a deep learning image-text model.",
+"clip_query": "Image search prompt",
+"clip_query_placeholder": "Example: black oversized streetwear shirt",
+"run_clip_search": "Run CLIP Image Search",
+"clip_search_empty": "No matching image results found.",
+"clip_search_results": "CLIP Image Search Results",
+"clip_search_warning": "First run may take time because the CLIP model needs to load.",
     },
 
     "ar": {
@@ -418,6 +427,15 @@ Put your images here:
 "keyword_search": "بحث بالكلمات",
 "ml_search": "بحث ذكي",
 "ml_search_note": "البحث الذكي يستخدم TF-IDF لاختيار مراجع أقرب للوصف.",
+
+"clip_search_title": "🖼️ بحث الصور باستخدام CLIP",
+"clip_search_description": "ابحث داخل صور الملابس باستخدام نموذج ذكاء اصطناعي يربط بين النص والصورة.",
+"clip_query": "وصف البحث عن الصورة",
+"clip_query_placeholder": "مثال: تيشيرت أسود واسع ستريت وير",
+"run_clip_search": "تشغيل بحث CLIP",
+"clip_search_empty": "لم يتم العثور على نتائج صور مطابقة.",
+"clip_search_results": "نتائج بحث الصور باستخدام CLIP",
+"clip_search_warning": "أول تشغيل قد يستغرق وقتاً لأن نموذج CLIP يحتاج إلى التحميل.",
     }
 }
 
