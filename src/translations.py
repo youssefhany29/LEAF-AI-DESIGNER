@@ -146,6 +146,11 @@ Put your images here:
         "manual_brief_title": "✍️ Manual Design Brief",
         "generate_manual_button": "Generate Manual Design Brief",
         "matching_refs_found": "matching reference design(s).",
+
+"download_txt": "⬇️ Download TXT",
+"download_md": "⬇️ Download Markdown",
+"download_word": "⬇️ Download Word",
+"download_pdf": "⬇️ Download PDF",
     },
 
     "ar": {
@@ -296,6 +301,11 @@ Put your images here:
         "manual_brief_title": "✍️ توليد يدوي لفكرة التصميم",
         "generate_manual_button": "توليد الفكرة اليدوية",
         "matching_refs_found": "مرجع تصميم مطابق.",
+
+"download_txt": "⬇️ تحميل TXT",
+"download_md": "⬇️ تحميل Markdown",
+"download_word": "⬇️ تحميل Word",
+"download_pdf": "⬇️ تحميل PDF",
     }
 }
 
