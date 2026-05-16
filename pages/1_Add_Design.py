@@ -4,99 +4,101 @@ from src.constants import CATEGORIES, FITS, SEASONS
 from src.database.design_repository import insert_design
 from src.services.image_service import save_uploaded_image
 from src.ui.shared import setup_page, show_app_header
+from src.translations import get_text
 
 
 setup_page("Add Design", "➕")
 show_app_header()
 
+t = get_text
 
-st.header("➕ Add New Clothing Reference")
+st.header(t("add_design_title"))
 
 with st.form("add_design_form"):
     product_name = st.text_input(
-        "Product Name",
-        placeholder="Example: LEAF Shirt Inspiration 001"
+        t("product_name"),
+        placeholder=t("ph_product_name")
     )
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        category = st.selectbox("Category", CATEGORIES)
+        category = st.selectbox(t("category"), CATEGORIES)
         subcategory = st.text_input(
-            "Subcategory",
-            placeholder="Example: Oversized T-shirt"
+            t("subcategory"),
+            placeholder=t("ph_subcategory")
         )
-        fit = st.selectbox("Fit", FITS)
+        fit = st.selectbox(t("fit"), FITS)
         style = st.text_input(
-            "Style",
-            placeholder="Example: Minimal Streetwear"
+            t("style"),
+            placeholder=t("ph_style")
         )
 
     with col2:
         primary_color = st.text_input(
-            "Primary Color",
-            placeholder="Example: Olive Green"
+            t("primary_color"),
+            placeholder=t("ph_primary_color")
         )
         secondary_color = st.text_input(
-            "Secondary Color",
-            placeholder="Example: White"
+            t("secondary_color"),
+            placeholder=t("ph_secondary_color")
         )
         pattern = st.text_input(
-            "Pattern",
-            placeholder="Example: Plain / Graphic / Striped"
+            t("pattern"),
+            placeholder=t("ph_pattern")
         )
         graphic_type = st.text_input(
-            "Graphic Type",
-            placeholder="Example: Small chest graphic"
+            t("graphic_type"),
+            placeholder=t("ph_graphic_type")
         )
 
     with col3:
         logo_position = st.text_input(
-            "Logo Position",
-            placeholder="Example: Left chest"
+            t("logo_position"),
+            placeholder=t("ph_logo_position")
         )
         sleeve_type = st.text_input(
-            "Sleeve Type",
-            placeholder="Example: Short sleeve"
+            t("sleeve_type"),
+            placeholder=t("ph_sleeve_type")
         )
         neck_type = st.text_input(
-            "Neck Type",
-            placeholder="Example: Crew neck"
+            t("neck_type"),
+            placeholder=t("ph_neck_type")
         )
-        season = st.selectbox("Season", SEASONS)
+        season = st.selectbox(t("season"), SEASONS)
 
     col4, col5 = st.columns(2)
 
     with col4:
         fabric_look = st.text_input(
-            "Fabric Look",
-            placeholder="Example: Cotton / Fleece / Denim"
+            t("fabric_look"),
+            placeholder=t("ph_fabric")
         )
         mood = st.text_input(
-            "Mood",
-            placeholder="Example: Clean premium / Sporty / Urban"
+            t("mood"),
+            placeholder=t("ph_mood")
         )
 
     with col5:
         tags = st.text_input(
-            "Tags",
-            placeholder="Example: eco, urban, modern"
+            t("tags"),
+            placeholder=t("ph_tags")
         )
         uploaded_image = st.file_uploader(
-            "Upload Design Image",
+            t("upload_design_image"),
             type=["png", "jpg", "jpeg", "webp"]
         )
 
     notes = st.text_area(
-        "Notes",
-        placeholder="Write anything important about this design..."
+        t("notes"),
+        placeholder=t("ph_notes")
     )
 
-    submitted = st.form_submit_button("Save Design")
+    submitted = st.form_submit_button(t("save_design"))
 
     if submitted:
         if not product_name or not primary_color or not style:
-            st.error("Please fill Product Name, Primary Color, and Style.")
+            st.error(t("required_fields_error"))
         else:
             image_path = save_uploaded_image(uploaded_image)
 
@@ -121,4 +123,4 @@ with st.form("add_design_form"):
                 image_path=image_path
             )
 
-            st.success("Design reference saved successfully ✅")
+            st.success(t("design_saved_success"))

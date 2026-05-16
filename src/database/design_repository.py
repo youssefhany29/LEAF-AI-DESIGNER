@@ -123,14 +123,103 @@ def insert_design(
     conn.close()
 
 
+def normalize_search_words(keyword):
+    """
+    Convert user search text into searchable English keywords.
+    Supports simple Arabic-to-English fashion terms.
+    """
+    arabic_to_english = {
+        "اعمل": [],
+        "صمم": [],
+        "اكتب": [],
+        "لي": [],
+        "عايز": [],
+        "اريد": [],
+
+        "تيشيرت": ["t-shirt", "shirt"],
+        "تشيرت": ["t-shirt", "shirt"],
+        "قميص": ["shirt"],
+        "هودي": ["hoodie"],
+        "سويتشيرت": ["sweatshirt"],
+        "بنطلون": ["pants"],
+        "شورت": ["shorts"],
+        "جاكيت": ["jacket"],
+        "كاب": ["cap"],
+
+        "اسود": ["black"],
+        "أسود": ["black"],
+        "ابيض": ["white"],
+        "أبيض": ["white"],
+        "رمادي": ["gray"],
+        "اخضر": ["green"],
+        "أخضر": ["green"],
+        "زيتي": ["olive"],
+        "ازرق": ["blue"],
+        "أزرق": ["blue"],
+        "احمر": ["red"],
+        "أحمر": ["red"],
+        "بيج": ["beige"],
+        "بني": ["brown"],
+
+        "واسع": ["oversized", "relaxed"],
+        "اوفرسايز": ["oversized"],
+        "أوفرسايز": ["oversized"],
+        "ضيق": ["slim"],
+        "عادي": ["regular"],
+
+        "صيفي": ["summer"],
+        "صيف": ["summer"],
+        "شتوي": ["winter"],
+        "شتاء": ["winter"],
+
+        "قطن": ["cotton"],
+        "فليس": ["fleece"],
+        "جينز": ["denim"],
+
+        "بسيط": ["minimal"],
+        "مينيمال": ["minimal"],
+        "ستريت": ["streetwear"],
+        "رياضي": ["sporty"],
+        "حضري": ["urban"],
+        "نضيف": ["clean"],
+        "فخم": ["premium"],
+        "بيئي": ["eco"],
+    }
+
+    stop_words = {
+        "make", "create", "design", "a", "an", "the", "for", "with",
+        "and", "or", "to", "of", "in", "on", "me", "leaf"
+    }
+
+    raw_words = keyword.replace(",", " ").split()
+    final_words = []
+
+    for raw_word in raw_words:
+        word = raw_word.strip().lower()
+
+        if not word or word in stop_words:
+            continue
+
+        if raw_word in arabic_to_english:
+            final_words.extend(arabic_to_english[raw_word])
+        elif word in arabic_to_english:
+            final_words.extend(arabic_to_english[word])
+        else:
+            final_words.append(word)
+
+    unique_words = []
+
+    for word in final_words:
+        if word and word not in unique_words:
+            unique_words.append(word)
+
+    return unique_words
+
+
 def search_designs(keyword="", category="All", fit="All", season="All"):
     """
     Search designs by keyword words, category, fit, and season.
-
-    Example:
-    'make black oversized shirt'
-    becomes:
-    search for black OR oversized OR shirt
+    Supports English and simple Arabic search terms.
     """
     conn = get_connection()
     cursor = conn.cursor()
@@ -162,17 +251,8 @@ def search_designs(keyword="", category="All", fit="All", season="All"):
         "notes"
     ]
 
-    stop_words = {
-        "make", "create", "design", "a", "an", "the", "for", "with",
-        "and", "or", "to", "of", "in", "on", "me", "leaf"
-    }
-
     if keyword:
-        words = [
-            word.strip().lower()
-            for word in keyword.replace(",", " ").split()
-            if word.strip().lower() not in stop_words
-        ]
+        words = normalize_search_words(keyword)
 
         if words:
             word_conditions = []

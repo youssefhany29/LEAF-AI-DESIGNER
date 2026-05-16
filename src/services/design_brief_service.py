@@ -1,4 +1,5 @@
 from collections import Counter
+from src.translations import get_text
 
 
 def get_most_common_value(designs, column_name, default_value="Not enough data"):
@@ -125,17 +126,11 @@ def generate_design_brief_from_library(user_prompt, matching_designs):
     Generate a new original design brief by reading metadata from matching library designs.
     """
     if len(matching_designs) == 0:
-        return """
-## No Matching References Found ⚠️
+        return f"""
+    ## {get_text("no_matching_refs_title")}
 
-I could not find matching designs in the library.
-
-Try one of these:
-- Add more designs to the library.
-- Use a broader category filter.
-- Set fit and season to All.
-- Use a simpler prompt.
-"""
+    {get_text("no_matching_refs_body")}
+    """
 
     category = get_most_common_value(matching_designs, "category", "T-shirt")
     subcategory = get_most_common_value(matching_designs, "subcategory", "Modern clothing piece")

@@ -3,8 +3,6 @@ TRANSLATIONS = {
         "app_title": "🌱 LEAF AI Designer",
         "app_subtitle": "AI-powered clothing inspiration library and fashion design assistant.",
         "language": "Language",
-        "english": "English",
-        "arabic": "Arabic",
 
         "home_welcome": "Welcome 👋",
         "home_description": """
@@ -18,7 +16,22 @@ The goal of this project is to build a system that can:
 - generate new original design briefs
 - later generate clothing mockup images
 """,
+"no_matching_refs_title": "No Matching References Found ⚠️",
+"no_matching_refs_body": """
+I could not find matching designs in the library.
+
+Try one of these:
+- Add more designs to the library.
+- Use a broader category filter.
+- Set fit and season to All.
+- Use a simpler prompt.
+""",
         "current_features": "Current Features ✅",
+        "feature_add_single": "Add a single clothing reference",
+        "feature_bulk_import": "Bulk import many designs from CSV",
+        "feature_library": "View and search the design library",
+        "feature_manual_brief": "Generate a design brief manually",
+        "feature_library_brief": "Generate a design brief from library references",
         "workflow": "Project Workflow",
 
         "add_design_title": "➕ Add New Clothing Reference",
@@ -44,6 +57,21 @@ The goal of this project is to build a system that can:
         "required_fields_error": "Please fill Product Name, Primary Color, and Style.",
         "design_saved_success": "Design reference saved successfully ✅",
 
+        "ph_product_name": "Example: LEAF Shirt Inspiration 001",
+        "ph_subcategory": "Example: Oversized T-shirt",
+        "ph_style": "Example: Minimal Streetwear",
+        "ph_primary_color": "Example: Olive Green",
+        "ph_secondary_color": "Example: White",
+        "ph_pattern": "Example: Plain / Graphic / Striped",
+        "ph_graphic_type": "Example: Small chest graphic",
+        "ph_logo_position": "Example: Left chest",
+        "ph_sleeve_type": "Example: Short sleeve",
+        "ph_neck_type": "Example: Crew neck",
+        "ph_fabric": "Example: Cotton / Fleece / Denim",
+        "ph_mood": "Example: Clean premium / Sporty / Urban",
+        "ph_tags": "Example: eco, urban, modern",
+        "ph_notes": "Write anything important about this design...",
+
         "bulk_import_title": "📦 Bulk Import Designs",
         "bulk_import_description": """
 Use this page when you want to import many designs at once.
@@ -58,11 +86,12 @@ Put your images here:
 """,
         "required_csv_format": "Required CSV Format",
         "start_bulk_import": "Start Bulk Import",
-        "skipped_rows": "Skipped rows",
+        "skipped_rows": "Skipped",
 
         "design_library_title": "📚 Design Library",
         "search_designs": "Search designs",
         "search_placeholder": "Search by style, color, tag, mood, category...",
+        "all": "All",
         "no_designs_found": "No designs found yet.",
         "found_designs": "Found",
         "designs": "design(s)",
@@ -90,14 +119,13 @@ Put your images here:
         "show_references": "Show references used",
         "manual_brief_title": "✍️ Manual Design Brief",
         "generate_manual_button": "Generate Manual Design Brief",
+        "matching_refs_found": "matching reference design(s).",
     },
 
     "ar": {
         "app_title": "🌱 مصمم LEAF الذكي",
         "app_subtitle": "مكتبة إلهام للملابس ومساعد ذكي لتصميم الأزياء.",
         "language": "اللغة",
-        "english": "الإنجليزية",
-        "arabic": "العربية",
 
         "home_welcome": "مرحباً 👋",
         "home_description": """
@@ -111,7 +139,22 @@ Put your images here:
 - توليد أفكار وتصميمات جديدة بشكل نصي
 - لاحقاً توليد صور وموك أب للملابس
 """,
+"no_matching_refs_title": "لم يتم العثور على مراجع مطابقة ⚠️",
+"no_matching_refs_body": """
+لم أستطع العثور على تصاميم مطابقة داخل المكتبة.
+
+جرّب واحداً من هذه الحلول:
+- أضف تصاميم أكثر إلى المكتبة.
+- استخدم فئة بحث أوسع.
+- اجعل القَصّة والموسم على الكل.
+- استخدم وصفاً أبسط للتصميم.
+""",
         "current_features": "الميزات الحالية ✅",
+        "feature_add_single": "إضافة مرجع تصميم واحد",
+        "feature_bulk_import": "استيراد عدد كبير من التصاميم من ملف CSV",
+        "feature_library": "عرض مكتبة التصاميم والبحث داخلها",
+        "feature_manual_brief": "توليد فكرة تصميم بشكل يدوي",
+        "feature_library_brief": "توليد فكرة تصميم من مراجع المكتبة",
         "workflow": "مسار عمل المشروع",
 
         "add_design_title": "➕ إضافة مرجع تصميم جديد",
@@ -137,6 +180,21 @@ Put your images here:
         "required_fields_error": "من فضلك املأ اسم المنتج، اللون الأساسي، والستايل.",
         "design_saved_success": "تم حفظ مرجع التصميم بنجاح ✅",
 
+        "ph_product_name": "مثال: مرجع تيشيرت LEAF رقم 001",
+        "ph_subcategory": "مثال: تيشيرت واسع",
+        "ph_style": "مثال: ستريت وير بسيط",
+        "ph_primary_color": "مثال: أخضر زيتوني",
+        "ph_secondary_color": "مثال: أبيض",
+        "ph_pattern": "مثال: سادة / جرافيك / مخطط",
+        "ph_graphic_type": "مثال: رسمة صغيرة على الصدر",
+        "ph_logo_position": "مثال: يسار الصدر",
+        "ph_sleeve_type": "مثال: كم قصير",
+        "ph_neck_type": "مثال: رقبة دائرية",
+        "ph_fabric": "مثال: قطن / فليس / دينم",
+        "ph_mood": "مثال: نظيف وفخم / رياضي / حضري",
+        "ph_tags": "مثال: بيئي، حضري، حديث",
+        "ph_notes": "اكتب أي ملاحظات مهمة عن التصميم...",
+
         "bulk_import_title": "📦 استيراد التصاميم دفعة واحدة",
         "bulk_import_description": """
 استخدم هذه الصفحة عندما تريد استيراد عدد كبير من التصاميم مرة واحدة.
@@ -151,11 +209,12 @@ Put your images here:
 """,
         "required_csv_format": "صيغة ملف CSV المطلوبة",
         "start_bulk_import": "بدء الاستيراد",
-        "skipped_rows": "الصفوف التي تم تخطيها",
+        "skipped_rows": "تم تخطي",
 
         "design_library_title": "📚 مكتبة التصاميم",
         "search_designs": "البحث في التصاميم",
         "search_placeholder": "ابحث بالستايل، اللون، الكلمات المفتاحية، الإحساس، الفئة...",
+        "all": "الكل",
         "no_designs_found": "لا توجد تصاميم بعد.",
         "found_designs": "تم العثور على",
         "designs": "تصميم",
@@ -182,7 +241,8 @@ Put your images here:
         "write_prompt_error": "من فضلك اكتب وصف التصميم أولاً.",
         "show_references": "عرض المراجع المستخدمة",
         "manual_brief_title": "✍️ توليد يدوي لفكرة التصميم",
-        "generate_manual_button": "توليد الفكرة يدويا",
+        "generate_manual_button": "توليد الفكرة اليدوية",
+        "matching_refs_found": "مرجع تصميم مطابق.",
     }
 }
 

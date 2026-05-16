@@ -22,24 +22,30 @@ def setup_page(title, icon="🌱"):
         st.session_state.language = "en"
 
 
+def is_arabic():
+    """
+    Return True if current language is Arabic.
+    """
+    return st.session_state.get("language", "en") == "ar"
+
+
 def apply_language_direction():
     """
-    Apply left-to-right or right-to-left layout based on selected language.
+    Apply clean Arabic RTL or English LTR layout.
     """
-    language = st.session_state.get("language", "en")
-
-    if language == "ar":
+    if is_arabic():
         st.markdown(
             """
             <style>
-            html, body, [class*="css"] {
-                direction: rtl;
-                text-align: right;
-            }
-
             .stApp {
                 direction: rtl;
+            }
+
+            .main .block-container {
+                direction: rtl;
                 text-align: right;
+                max-width: 1150px;
+                padding-top: 3rem;
             }
 
             section[data-testid="stSidebar"] {
@@ -56,26 +62,39 @@ def apply_language_direction():
                 text-align: right;
             }
 
-            div[data-testid="stTextInput"] label,
-            div[data-testid="stTextArea"] label,
-            div[data-testid="stSelectbox"] label,
-            div[data-testid="stFileUploader"] label {
+            div[data-testid="stMarkdownContainer"] ul {
+                direction: rtl;
+                text-align: right;
+                list-style-position: inside;
+            }
+
+            label, p, h1, h2, h3, h4, h5, h6 {
                 direction: rtl;
                 text-align: right;
             }
 
             input, textarea {
+                direction: rtl !important;
+                text-align: right !important;
+            }
+
+            div[data-baseweb="select"] {
                 direction: rtl;
+                text-align: right;
+            }
+
+            div[data-baseweb="select"] * {
                 text-align: right;
             }
 
             .stButton > button {
                 direction: rtl;
+                text-align: center;
             }
 
-            code, pre {
-                direction: ltr;
-                text-align: left;
+            code, pre, .stCode {
+                direction: ltr !important;
+                text-align: left !important;
             }
             </style>
             """,
@@ -85,14 +104,15 @@ def apply_language_direction():
         st.markdown(
             """
             <style>
-            html, body, [class*="css"] {
-                direction: ltr;
-                text-align: left;
-            }
-
             .stApp {
                 direction: ltr;
+            }
+
+            .main .block-container {
+                direction: ltr;
                 text-align: left;
+                max-width: 1150px;
+                padding-top: 3rem;
             }
 
             section[data-testid="stSidebar"] {
@@ -105,14 +125,19 @@ def apply_language_direction():
                 text-align: left;
             }
 
-            input, textarea {
+            label, p, h1, h2, h3, h4, h5, h6 {
                 direction: ltr;
                 text-align: left;
             }
 
-            code, pre {
-                direction: ltr;
-                text-align: left;
+            input, textarea {
+                direction: ltr !important;
+                text-align: left !important;
+            }
+
+            code, pre, .stCode {
+                direction: ltr !important;
+                text-align: left !important;
             }
             </style>
             """,
