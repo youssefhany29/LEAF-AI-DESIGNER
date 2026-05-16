@@ -192,6 +192,16 @@ Put your images here:
 "top_seasons": "Top Seasons",
 "top_tags": "Top Tags",
 "analytics_empty": "No designs found yet. Add or bulk import designs first.",
+
+"ml_search_title": "🧠 ML Search",
+"ml_search_description": "Search your clothing references using TF-IDF and cosine similarity.",
+"ml_query": "Search prompt",
+"ml_query_placeholder": "Example: clean sporty black oversized shirt",
+"top_k_results": "Number of results",
+"run_ml_search": "Run ML Search",
+"ml_search_empty": "No matching results found.",
+"ml_search_results": "ML Search Results",
+"similarity_score": "Similarity Score",
     },
 
     "ar": {
@@ -388,6 +398,16 @@ Put your images here:
 "top_seasons": "أكثر المواسم تكراراً",
 "top_tags": "أكثر الكلمات المفتاحية تكراراً",
 "analytics_empty": "لا توجد تصاميم بعد. أضف تصاميم أو استوردها أولاً.",
+
+"ml_search_title": "🧠 بحث ذكي بتعلم الآلة",
+"ml_search_description": "ابحث داخل مراجع الملابس باستخدام TF-IDF وقياس التشابه.",
+"ml_query": "وصف البحث",
+"ml_query_placeholder": "مثال: تيشيرت أسود واسع ستايل بسيط",
+"top_k_results": "عدد النتائج",
+"run_ml_search": "تشغيل البحث الذكي",
+"ml_search_empty": "لم يتم العثور على نتائج مطابقة.",
+"ml_search_results": "نتائج البحث الذكي",
+"similarity_score": "درجة التشابه",
     }
 }
 
