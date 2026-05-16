@@ -168,6 +168,10 @@ Put your images here:
 "generated_designs_count": "generated design(s)",
 "show_prompt": "Show Prompt",
 "generated_design_deleted_success": "Generated design deleted successfully ✅",
+
+"show_image_prompt": "Show image generation prompt",
+"create_generated_design_draft": "Create Design Draft",
+"generated_design_draft_created": "Generated design draft created successfully ✅",
     },
 
     "ar": {
@@ -340,6 +344,10 @@ Put your images here:
 "generated_designs_count": "تصميم مولد",
 "show_prompt": "عرض الوصف",
 "generated_design_deleted_success": "تم حذف التصميم المولد بنجاح ✅",
+
+"show_image_prompt": "عرض وصف توليد الصورة",
+"create_generated_design_draft": "إنشاء مسودة تصميم",
+"generated_design_draft_created": "تم إنشاء مسودة التصميم بنجاح ✅",
     }
 }
 

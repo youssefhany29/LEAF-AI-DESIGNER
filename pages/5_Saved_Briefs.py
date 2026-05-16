@@ -2,11 +2,8 @@ import streamlit as st
 
 from src.database.design_repository import (
     get_generated_briefs,
-    delete_generated_brief
-)
-from src.services.export_service import (
-    create_word_export,
-    create_pdf_export
+    delete_generated_brief,
+    insert_generated_design
 )
 from src.ui.shared import setup_page, show_app_header
 from src.translations import get_text
@@ -61,6 +58,89 @@ def create_markdown_export(brief):
     return content.strip()
 
 
+def extract_image_prompt(brief_text):
+    """
+    Extract the image generation prompt from a saved brief.
+
+    Works with English and Arabic generated briefs.
+    If no prompt section is found, it returns an empty string.
+    """
+    if not brief_text:
+        return ""
+
+    english_marker = "## 6. Image Generation Prompt For Later"
+    arabic_marker = "## 6. وصف توليد الصورة لاحقاً"
+
+    markers = [english_marker, arabic_marker]
+
+    for marker in markers:
+        if marker in brief_text:
+            after_marker = brief_text.split(marker, 1)[1].strip()
+
+            stop_markers = [
+                "## 7.",
+                "###",
+                "---"
+            ]
+
+            extracted_text = after_marker
+
+            for stop_marker in stop_markers:
+                if stop_marker in extracted_text:
+                    extracted_text = extracted_text.split(stop_marker, 1)[0].strip()
+
+            return extracted_text.strip()
+
+    return ""
+
+
+def create_design_title_from_prompt(prompt):
+    """
+    Create a simple generated design title from the original prompt.
+    """
+    if not prompt:
+        return "Generated LEAF Design"
+
+    clean_prompt = prompt.strip()
+
+    if len(clean_prompt) > 50:
+        clean_prompt = clean_prompt[:50].strip() + "..."
+
+    return clean_prompt
+
+
+def create_generated_design_draft(brief):
+    """
+    Create a generated design draft from a saved brief.
+    """
+    image_prompt = extract_image_prompt(brief["brief"])
+
+    if not image_prompt:
+        image_prompt = brief["prompt"]
+
+    title = create_design_title_from_prompt(brief["prompt"])
+
+    notes = f"""
+Generated from saved brief #{brief['id']}
+
+Original prompt:
+{brief['prompt']}
+
+References:
+{brief['reference_names'] or t('not_specified')}
+
+Full saved brief:
+{brief['brief']}
+""".strip()
+
+    insert_generated_design(
+        title=title,
+        prompt=image_prompt,
+        image_path=None,
+        notes=notes
+    )
+
+
 briefs = get_generated_briefs()
 
 if len(briefs) == 0:
@@ -79,15 +159,19 @@ else:
             st.write(f"**{t('references')}:** {brief['reference_names'] or t('not_specified')}")
             st.caption(f"{t('created_at')}: {brief['created_at']}")
 
+            image_prompt = extract_image_prompt(brief["brief"])
+
+            if image_prompt:
+                with st.expander(t("show_image_prompt")):
+                    st.code(image_prompt, language="text")
+
             with st.expander(t("show_saved_brief")):
                 st.markdown(brief["brief"])
 
             txt_content = create_export_text(brief)
             md_content = create_markdown_export(brief)
-            word_content = create_word_export(brief)
-            pdf_content = create_pdf_export(brief)
 
-            col1, col2, col3, col4, col5 = st.columns(5)
+            col1, col2, col3, col4 = st.columns(4)
 
             with col1:
                 st.download_button(
@@ -108,24 +192,11 @@ else:
                 )
 
             with col3:
-                st.download_button(
-                    label=t("download_word"),
-                    data=word_content,
-                    file_name=f"leaf_design_brief_{brief['id']}.docx",
-                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    key=f"download_word_{brief['id']}"
-                )
+                if st.button(t("create_generated_design_draft"), key=f"draft_{brief['id']}"):
+                    create_generated_design_draft(brief)
+                    st.success(t("generated_design_draft_created"))
 
             with col4:
-                st.download_button(
-                    label=t("download_pdf"),
-                    data=pdf_content,
-                    file_name=f"leaf_design_brief_{brief['id']}.pdf",
-                    mime="application/pdf",
-                    key=f"download_pdf_{brief['id']}"
-                )
-
-            with col5:
                 if st.button(f"{t('delete_brief')} #{brief['id']}", key=f"delete_{brief['id']}"):
                     delete_generated_brief(brief["id"])
                     st.success(t("brief_deleted_success"))
