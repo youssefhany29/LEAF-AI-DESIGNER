@@ -1,27 +1,18 @@
 import streamlit as st
 
 from src.ui.shared import setup_page, show_app_header
+from src.translations import get_text
 
 
 setup_page("LEAF AI Designer", "🌱")
 show_app_header()
 
 
-st.header("Welcome 👋")
+st.header(get_text("home_welcome"))
 
-st.write("""
-LEAF AI Designer is an AI-powered fashion design assistant.
+st.write(get_text("home_description"))
 
-The goal of this project is to build a system that can:
-
-- store clothing inspiration references
-- organize designs by metadata
-- search and filter design references
-- generate new original design briefs
-- later generate clothing mockup images
-""")
-
-st.subheader("Current Features ✅")
+st.subheader(get_text("current_features"))
 
 st.write("""
 - Add a single clothing reference
@@ -31,7 +22,7 @@ st.write("""
 - Generate a design brief from library references
 """)
 
-st.subheader("Project Workflow")
+st.subheader(get_text("workflow"))
 
 st.code(
     """
@@ -39,5 +30,3 @@ Dataset → Metadata → Search/Retrieval → Design Brief → Image Generation
 """,
     language="text"
 )
-
-st.info("Use the pages from the sidebar to continue building your LEAF AI Designer project.")
