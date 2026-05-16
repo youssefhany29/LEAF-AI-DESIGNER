@@ -29,6 +29,29 @@ def filter_designs(designs, category_filter="All", fit_filter="All", season_filt
     return filtered_designs
 
 
+def filter_scored_results(results, category_filter="All", fit_filter="All", season_filter="All"):
+    """
+    Filter scored search results while keeping their scores.
+    """
+    filtered_results = []
+
+    for result in results:
+        design = result["design"]
+
+        if category_filter != "All" and design["category"] != category_filter:
+            continue
+
+        if fit_filter != "All" and design["fit"] != fit_filter:
+            continue
+
+        if season_filter != "All" and design["season"] != season_filter:
+            continue
+
+        filtered_results.append(result)
+
+    return filtered_results
+
+
 def get_reference_names(designs, limit=5):
     """
     Return comma-separated reference names.
@@ -41,7 +64,34 @@ def get_reference_names(designs, limit=5):
     return ", ".join(reference_names)
 
 
-def find_reference_designs(
+def create_plain_results(designs):
+    """
+    Convert plain design rows into scored result format.
+    """
+    results = []
+
+    for design in designs:
+        results.append({
+            "design": design,
+            "score": None
+        })
+
+    return results
+
+
+def extract_designs_from_results(results):
+    """
+    Extract only design rows from scored results.
+    """
+    designs = []
+
+    for result in results:
+        designs.append(result["design"])
+
+    return designs
+
+
+def find_reference_results(
     user_prompt,
     keyword,
     category_filter,
@@ -54,7 +104,10 @@ def find_reference_designs(
     Find reference designs using keyword, TF-IDF ML, or CLIP image search.
 
     Returns:
-        list[sqlite3.Row]
+        list[dict]
+        [
+            {"design": sqlite_row, "score": float_or_none}
+        ]
     """
     search_keyword = keyword.strip()
 
@@ -62,12 +115,14 @@ def find_reference_designs(
         search_keyword = user_prompt.strip()
 
     if search_method == SEARCH_METHOD_KEYWORD:
-        return search_designs(
+        designs = search_designs(
             keyword=search_keyword,
             category=category_filter,
             fit=fit_filter,
             season=season_filter
         )
+
+        return create_plain_results(designs)
 
     all_designs = get_all_designs()
 
@@ -78,10 +133,8 @@ def find_reference_designs(
             top_k=top_k
         )
 
-        designs = [result["design"] for result in ml_results]
-
-        return filter_designs(
-            designs=designs,
+        return filter_scored_results(
+            results=ml_results,
             category_filter=category_filter,
             fit_filter=fit_filter,
             season_filter=season_filter
@@ -94,10 +147,8 @@ def find_reference_designs(
             top_k=top_k
         )
 
-        designs = [result["design"] for result in clip_results]
-
-        return filter_designs(
-            designs=designs,
+        return filter_scored_results(
+            results=clip_results,
             category_filter=category_filter,
             fit_filter=fit_filter,
             season_filter=season_filter

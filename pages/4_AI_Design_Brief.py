@@ -7,7 +7,8 @@ from src.services.reference_search_service import (
     SEARCH_METHOD_CLIP,
     SEARCH_METHOD_KEYWORD,
     SEARCH_METHOD_ML,
-    find_reference_designs,
+    extract_designs_from_results,
+    find_reference_results,
     get_reference_names
 )
 from src.database.brief_repository import insert_generated_brief
@@ -43,24 +44,28 @@ def get_current_language():
     """
     return st.session_state.get("language", "en")
 
-def show_reference_board(matching_designs):
+def show_reference_board(reference_results):
     """
     Show the reference images used to generate the design brief.
+    Includes similarity scores when available.
     """
-    if len(matching_designs) == 0:
+    if len(reference_results) == 0:
         return
 
     st.subheader(t("reference_board_title"))
 
-    max_references_to_show = min(len(matching_designs), 6)
-    references = matching_designs[:max_references_to_show]
+    max_references_to_show = min(len(reference_results), 6)
+    references = reference_results[:max_references_to_show]
     columns_per_row = 3
 
     for start_index in range(0, len(references), columns_per_row):
         row_items = references[start_index:start_index + columns_per_row]
         columns = st.columns(columns_per_row)
 
-        for column, design in zip(columns, row_items):
+        for column, result in zip(columns, row_items):
+            design = result["design"]
+            score = result["score"]
+
             with column:
                 image_path = design["image_path"]
 
@@ -77,6 +82,8 @@ def show_reference_board(matching_designs):
                     f"{design['primary_color']}"
                 )
 
+                if score is not None:
+                    st.write(f"**{t('similarity_score')}:** {score:.4f}")
 
 def save_last_brief_button():
     """
@@ -156,7 +163,7 @@ if mode == t("generate_from_library"):
         if not user_prompt:
             st.error(t("write_prompt_error"))
         else:
-            matching_designs = find_reference_designs(
+            reference_results = find_reference_results(
                 user_prompt=user_prompt,
                 keyword=keyword,
                 category_filter=category_filter,
@@ -166,6 +173,7 @@ if mode == t("generate_from_library"):
                 top_k=10
             )
 
+            matching_designs = extract_designs_from_results(reference_results)
             reference_names_text = get_reference_names(matching_designs)
 
             brief = generate_design_brief_from_library(
@@ -173,6 +181,7 @@ if mode == t("generate_from_library"):
                 matching_designs=matching_designs
             )
 
+            st.session_state["last_reference_results"] = reference_results
             st.session_state["last_matching_designs"] = matching_designs
             st.session_state["last_generated_prompt"] = user_prompt
             st.session_state["last_generated_brief"] = brief
@@ -181,11 +190,12 @@ if mode == t("generate_from_library"):
 
     if "last_generated_brief" in st.session_state:
         matching_designs = st.session_state.get("last_matching_designs", [])
+        reference_results = st.session_state.get("last_reference_results", [])
 
         st.write(f"{t('found_designs')} **{len(matching_designs)}** {t('matching_refs_found')}")
 
-        if len(matching_designs) > 0:
-            show_reference_board(matching_designs)
+        if len(reference_results) > 0:
+            show_reference_board(reference_results)
 
             with st.expander(t("show_references")):
                 for design in matching_designs[:5]:
