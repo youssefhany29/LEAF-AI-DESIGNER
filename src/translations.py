@@ -26,7 +26,7 @@ Try one of these:
 - Set fit and season to All.
 - Use a simpler prompt.
 """,
-        
+
 "reference_board_title": "🖼️ Reference Inspiration Board",
 "save_generated_brief": "💾 Save Generated Brief",
 "brief_saved_success": "Generated brief saved successfully ✅",
@@ -38,6 +38,20 @@ Try one of these:
 "show_saved_brief": "Show saved brief",
 "delete_brief": "Delete Brief",
 "brief_deleted_success": "Brief deleted successfully ✅",
+
+"manage_design": "Manage Design",
+"view_only": "View Only",
+"edit_design": "Edit Design",
+"delete_design": "Delete Design",
+"save_changes": "Save Changes",
+"design_updated_success": "Design updated successfully ✅",
+"delete_warning": "Warning: deleting this design will remove it from the database.",
+"delete_image_too": "Also delete image file from local storage",
+"type_delete_to_confirm": "Type DELETE to confirm",
+"delete_confirm_error": "Please type DELETE to confirm deletion.",
+"design_deleted_success": "Design deleted successfully ✅",
+"image_delete_warning": "Design was deleted, but the image file could not be removed.",
+
         "current_features": "Current Features ✅",
         "feature_add_single": "Add a single clothing reference",
         "feature_bulk_import": "Bulk import many designs from CSV",
@@ -173,6 +187,20 @@ Put your images here:
 "show_saved_brief": "عرض فكرة التصميم المحفوظة",
 "delete_brief": "حذف الفكرة",
 "brief_deleted_success": "تم حذف الفكرة بنجاح ✅",
+
+"manage_design": "إدارة التصميم",
+"view_only": "عرض فقط",
+"edit_design": "تعديل التصميم",
+"delete_design": "حذف التصميم",
+"save_changes": "حفظ التعديلات",
+"design_updated_success": "تم تحديث التصميم بنجاح ✅",
+"delete_warning": "تحذير: حذف هذا التصميم سيزيله من قاعدة البيانات.",
+"delete_image_too": "حذف صورة التصميم من التخزين المحلي أيضاً",
+"type_delete_to_confirm": "اكتب DELETE لتأكيد الحذف",
+"delete_confirm_error": "من فضلك اكتب DELETE لتأكيد الحذف.",
+"design_deleted_success": "تم حذف التصميم بنجاح ✅",
+"image_delete_warning": "تم حذف التصميم، لكن لم يتم حذف ملف الصورة.",
+
 
         "current_features": "الميزات الحالية ✅",
         "feature_add_single": "إضافة مرجع تصميم واحد",

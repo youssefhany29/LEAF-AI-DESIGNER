@@ -195,6 +195,7 @@ def normalize_search_words(keyword):
         "نضيف": ["clean"],
         "فخم": ["premium"],
         "بيئي": ["eco"],
+
         "شعار": ["logo"],
         "صدر": ["chest"],
         "ظهر": ["back"],
@@ -302,6 +303,112 @@ def search_designs(keyword="", category="All", fit="All", season="All"):
 
     conn.close()
     return designs
+
+
+def get_design_by_id(design_id):
+    """
+    Return one design by ID.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT * FROM designs
+        WHERE id = ?
+    """, (design_id,))
+
+    design = cursor.fetchone()
+
+    conn.close()
+    return design
+
+
+def update_design(
+    design_id,
+    product_name,
+    category,
+    subcategory,
+    fit,
+    style,
+    primary_color,
+    secondary_color,
+    pattern,
+    graphic_type,
+    logo_position,
+    sleeve_type,
+    neck_type,
+    season,
+    fabric_look,
+    mood,
+    tags,
+    notes
+):
+    """
+    Update an existing design metadata record.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE designs
+        SET
+            product_name = ?,
+            category = ?,
+            subcategory = ?,
+            fit = ?,
+            style = ?,
+            primary_color = ?,
+            secondary_color = ?,
+            pattern = ?,
+            graphic_type = ?,
+            logo_position = ?,
+            sleeve_type = ?,
+            neck_type = ?,
+            season = ?,
+            fabric_look = ?,
+            mood = ?,
+            tags = ?,
+            notes = ?
+        WHERE id = ?
+    """, (
+        product_name,
+        category,
+        subcategory,
+        fit,
+        style,
+        primary_color,
+        secondary_color,
+        pattern,
+        graphic_type,
+        logo_position,
+        sleeve_type,
+        neck_type,
+        season,
+        fabric_look,
+        mood,
+        tags,
+        notes,
+        design_id
+    ))
+
+    conn.commit()
+    conn.close()
+
+
+def delete_design(design_id):
+    """
+    Delete a design from the database.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM designs
+        WHERE id = ?
+    """, (design_id,))
+
+    conn.commit()
+    conn.close()
 
 
 def insert_generated_brief(prompt, brief, language, reference_names):
