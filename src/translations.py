@@ -172,6 +172,13 @@ Put your images here:
 "show_image_prompt": "Show image generation prompt",
 "create_generated_design_draft": "Create Design Draft",
 "generated_design_draft_created": "Generated design draft created successfully ✅",
+
+"prompt_workspace": "🧠 Prompt Workspace",
+"improve_prompt": "Improve Prompt",
+"save_prompt_changes": "Save Prompt Changes",
+"prompt_improved_success": "Prompt improved successfully ✅",
+"prompt_saved_success": "Prompt changes saved successfully ✅",
+"download_prompt": "Download Prompt",
     },
 
     "ar": {
@@ -348,6 +355,13 @@ Put your images here:
 "show_image_prompt": "عرض وصف توليد الصورة",
 "create_generated_design_draft": "إنشاء مسودة تصميم",
 "generated_design_draft_created": "تم إنشاء مسودة التصميم بنجاح ✅",
+
+"prompt_workspace": "🧠 مساحة تعديل الوصف",
+"improve_prompt": "تحسين الوصف",
+"save_prompt_changes": "حفظ تعديلات الوصف",
+"prompt_improved_success": "تم تحسين الوصف بنجاح ✅",
+"prompt_saved_success": "تم حفظ تعديلات الوصف بنجاح ✅",
+"download_prompt": "تحميل الوصف",
     }
 }
 

@@ -6,7 +6,8 @@ import streamlit as st
 from src.database.design_repository import (
     insert_generated_design,
     get_generated_designs,
-    delete_generated_design
+    delete_generated_design,
+    update_generated_design_prompt
 )
 from src.services.image_service import save_generated_image
 from src.ui.shared import setup_page, show_app_header
@@ -19,8 +20,48 @@ show_app_header()
 t = get_text
 
 st.header(t("generated_designs_title"))
-
 st.write(t("generated_designs_description"))
+
+
+def improve_prompt(prompt):
+    """
+    Improve a basic image prompt using a rule-based prompt enhancer.
+    Later, this can be replaced with a real LLM.
+    """
+    if not prompt:
+        return ""
+
+    extra_details = (
+        " clean studio lighting, realistic fabric texture, high quality fashion product photography, "
+        "front view, centered composition, premium streetwear look, detailed garment shape, "
+        "clear logo placement, professional clothing mockup, no watermark, no copied brand logo"
+    )
+
+    lower_prompt = prompt.lower()
+
+    if "studio" in lower_prompt or "realistic fabric" in lower_prompt:
+        return prompt
+
+    return prompt.strip() + "," + extra_details
+
+
+def prompt_to_txt(title, prompt, notes):
+    """
+    Create TXT content for prompt export.
+    """
+    content = f"""
+LEAF AI Designer - Image Prompt
+
+Title:
+{title}
+
+Prompt:
+{prompt}
+
+Notes:
+{notes if notes else "No notes"}
+"""
+    return content.strip()
 
 
 with st.expander(t("add_generated_design")):
@@ -32,12 +73,14 @@ with st.expander(t("add_generated_design")):
 
         prompt = st.text_area(
             t("generated_design_prompt"),
-            placeholder=t("generated_design_prompt_placeholder")
+            placeholder=t("generated_design_prompt_placeholder"),
+            height=160
         )
 
         notes = st.text_area(
             t("notes"),
-            placeholder=t("generated_design_notes_placeholder")
+            placeholder=t("generated_design_notes_placeholder"),
+            height=120
         )
 
         uploaded_image = st.file_uploader(
@@ -71,30 +114,80 @@ if len(generated_designs) == 0:
 else:
     st.write(f"{t('found_designs')} **{len(generated_designs)}** {t('generated_designs_count')}.")
 
-    columns_per_row = 3
+    for design in generated_designs:
+        with st.container():
+            st.markdown("---")
 
-    for start_index in range(0, len(generated_designs), columns_per_row):
-        row_items = generated_designs[start_index:start_index + columns_per_row]
-        columns = st.columns(columns_per_row)
+            col_img, col_workspace = st.columns([1, 2])
 
-        for column, design in zip(columns, row_items):
-            with column:
-                with st.container():
-                    if design["image_path"] and Path(design["image_path"]).exists():
-                        st.image(design["image_path"], width="stretch")
-                    else:
-                        st.info(t("no_image_uploaded"))
+            with col_img:
+                if design["image_path"] and Path(design["image_path"]).exists():
+                    st.image(design["image_path"], width="stretch")
+                else:
+                    st.info(t("no_image_uploaded"))
 
-                    st.subheader(design["title"])
-                    st.caption(f"{t('created_at')}: {design['created_at']}")
+                st.subheader(design["title"])
+                st.caption(f"{t('created_at')}: {design['created_at']}")
 
-                    with st.expander(t("show_prompt")):
-                        st.write(design["prompt"])
+            with col_workspace:
+                st.subheader(t("prompt_workspace"))
 
-                    if design["notes"]:
-                        with st.expander(t("notes")):
-                            st.write(design["notes"])
+                edited_prompt = st.text_area(
+                    t("generated_design_prompt"),
+                    value=design["prompt"] or "",
+                    height=180,
+                    key=f"prompt_editor_{design['id']}"
+                )
 
+                edited_notes = st.text_area(
+                    t("notes"),
+                    value=design["notes"] or "",
+                    height=120,
+                    key=f"notes_editor_{design['id']}"
+                )
+
+                col1, col2, col3 = st.columns(3)
+
+                with col1:
+                    if st.button(t("improve_prompt"), key=f"improve_prompt_{design['id']}"):
+                        improved_prompt = improve_prompt(edited_prompt)
+
+                        update_generated_design_prompt(
+                            design_id=design["id"],
+                            prompt=improved_prompt,
+                            notes=edited_notes
+                        )
+
+                        st.success(t("prompt_improved_success"))
+                        st.rerun()
+
+                with col2:
+                    if st.button(t("save_prompt_changes"), key=f"save_prompt_{design['id']}"):
+                        update_generated_design_prompt(
+                            design_id=design["id"],
+                            prompt=edited_prompt,
+                            notes=edited_notes
+                        )
+
+                        st.success(t("prompt_saved_success"))
+                        st.rerun()
+
+                with col3:
+                    txt_content = prompt_to_txt(
+                        title=design["title"],
+                        prompt=edited_prompt,
+                        notes=edited_notes
+                    )
+
+                    st.download_button(
+                        label=t("download_prompt"),
+                        data=txt_content,
+                        file_name=f"leaf_image_prompt_{design['id']}.txt",
+                        mime="text/plain",
+                        key=f"download_prompt_{design['id']}"
+                    )
+
+                with st.expander(t("delete_design")):
                     delete_image_too = st.checkbox(
                         t("delete_image_too"),
                         key=f"delete_generated_image_{design['id']}"

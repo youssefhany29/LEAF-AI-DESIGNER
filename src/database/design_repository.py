@@ -594,3 +594,25 @@ def delete_generated_design(design_id):
 
     conn.commit()
     conn.close()
+
+def update_generated_design_prompt(design_id, prompt, notes):
+    """
+    Update prompt and notes for a generated design draft.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE generated_designs
+        SET
+            prompt = ?,
+            notes = ?
+        WHERE id = ?
+    """, (
+        prompt,
+        notes,
+        design_id
+    ))
+
+    conn.commit()
+    conn.close()
