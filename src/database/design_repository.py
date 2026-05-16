@@ -47,12 +47,12 @@ def init_db():
     """)
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS generated_briefs (
+        CREATE TABLE IF NOT EXISTS generated_designs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
             prompt TEXT NOT NULL,
-            brief TEXT NOT NULL,
-            language TEXT NOT NULL,
-            reference_names TEXT,
+            image_path TEXT,
+            notes TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
@@ -532,6 +532,65 @@ def delete_generated_brief(brief_id):
         DELETE FROM generated_briefs
         WHERE id = ?
     """, (brief_id,))
+
+    conn.commit()
+    conn.close()
+
+def insert_generated_design(title, prompt, image_path, notes):
+    """
+    Save a generated design/mockup into the database.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO generated_designs (
+            title,
+            prompt,
+            image_path,
+            notes
+        )
+        VALUES (?, ?, ?, ?)
+    """, (
+        title,
+        prompt,
+        image_path,
+        notes
+    ))
+
+    conn.commit()
+    conn.close()
+
+
+def get_generated_designs():
+    """
+    Return all generated designs from newest to oldest.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT * FROM generated_designs
+        ORDER BY created_at DESC
+    """)
+
+    designs = cursor.fetchall()
+
+    conn.close()
+    return designs
+
+
+def delete_generated_design(design_id):
+    """
+    Delete a generated design from the database.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM generated_designs
+        WHERE id = ?
+    """, (design_id,))
 
     conn.commit()
     conn.close()

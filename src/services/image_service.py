@@ -23,3 +23,9 @@ def save_uploaded_image(uploaded_file):
     image.save(image_path)
 
     return str(image_path)
+
+def save_generated_image(uploaded_file):
+    """
+    Save a generated/mockup image inside data/images and return its path.
+    """
+    return save_uploaded_image(uploaded_file)

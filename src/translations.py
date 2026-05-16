@@ -151,6 +151,23 @@ Put your images here:
 "download_md": "⬇️ Download Markdown",
 "download_word": "⬇️ Download Word",
 "download_pdf": "⬇️ Download PDF",
+
+"generated_designs_title": "🖼️ Generated Designs",
+"generated_designs_description": "This page stores generated clothing mockups and design images. Later, AI-generated images will appear here automatically.",
+"add_generated_design": "➕ Add Generated Design",
+"generated_design_title": "Design Title",
+"generated_design_title_placeholder": "Example: Black Oversized LEAF Shirt",
+"generated_design_prompt": "Image Generation Prompt",
+"generated_design_prompt_placeholder": "Paste or write the prompt used to generate this image...",
+"generated_design_notes_placeholder": "Write notes about this generated design...",
+"upload_generated_image": "Upload Generated Image",
+"save_generated_design": "Save Generated Design",
+"generated_design_required_error": "Please fill Design Title and Prompt.",
+"generated_design_saved_success": "Generated design saved successfully ✅",
+"no_generated_designs": "No generated designs saved yet.",
+"generated_designs_count": "generated design(s)",
+"show_prompt": "Show Prompt",
+"generated_design_deleted_success": "Generated design deleted successfully ✅",
     },
 
     "ar": {
@@ -306,6 +323,23 @@ Put your images here:
 "download_md": "⬇️ تحميل Markdown",
 "download_word": "⬇️ تحميل Word",
 "download_pdf": "⬇️ تحميل PDF",
+
+"generated_designs_title": "🖼️ التصاميم المولدة",
+"generated_designs_description": "هذه الصفحة تحفظ صور التصاميم والموك أب. لاحقاً ستظهر هنا الصور التي يولدها الذكاء الاصطناعي تلقائياً.",
+"add_generated_design": "➕ إضافة تصميم مولد",
+"generated_design_title": "عنوان التصميم",
+"generated_design_title_placeholder": "مثال: تيشيرت LEAF أسود واسع",
+"generated_design_prompt": "وصف توليد الصورة",
+"generated_design_prompt_placeholder": "اكتب أو الصق الوصف المستخدم لتوليد هذه الصورة...",
+"generated_design_notes_placeholder": "اكتب ملاحظات عن هذا التصميم المولد...",
+"upload_generated_image": "رفع صورة التصميم المولد",
+"save_generated_design": "حفظ التصميم المولد",
+"generated_design_required_error": "من فضلك املأ عنوان التصميم ووصف التوليد.",
+"generated_design_saved_success": "تم حفظ التصميم المولد بنجاح ✅",
+"no_generated_designs": "لا توجد تصاميم مولدة محفوظة بعد.",
+"generated_designs_count": "تصميم مولد",
+"show_prompt": "عرض الوصف",
+"generated_design_deleted_success": "تم حذف التصميم المولد بنجاح ✅",
     }
 }
 
