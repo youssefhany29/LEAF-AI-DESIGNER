@@ -232,10 +232,59 @@ def normalize_search_words(keyword):
     return unique_words
 
 
+def calculate_design_score(design, search_words, category="All", fit="All", season="All"):
+    """
+    Calculate how relevant a design is to the user's search.
+
+    Higher score = better match.
+    """
+    score = 0
+
+    weighted_columns = {
+        "category": 5,
+        "subcategory": 4,
+        "fit": 5,
+        "style": 4,
+        "primary_color": 5,
+        "secondary_color": 3,
+        "pattern": 2,
+        "graphic_type": 4,
+        "logo_position": 2,
+        "sleeve_type": 2,
+        "neck_type": 2,
+        "season": 2,
+        "fabric_look": 2,
+        "mood": 3,
+        "tags": 4,
+        "notes": 1,
+        "product_name": 2,
+    }
+
+    for word in search_words:
+        for column, weight in weighted_columns.items():
+            value = design[column]
+
+            if value is not None and word.lower() in str(value).lower():
+                score += weight
+
+    if category != "All" and design["category"] == category:
+        score += 10
+
+    if fit != "All" and design["fit"] == fit:
+        score += 10
+
+    if season != "All" and design["season"] == season:
+        score += 5
+
+    return score
+
+
 def search_designs(keyword="", category="All", fit="All", season="All"):
     """
     Search designs by keyword words, category, fit, and season.
     Supports English and simple Arabic search terms.
+
+    Results are ranked by relevance score.
     """
     conn = get_connection()
     cursor = conn.cursor()
@@ -267,13 +316,15 @@ def search_designs(keyword="", category="All", fit="All", season="All"):
         "notes"
     ]
 
-    if keyword:
-        words = normalize_search_words(keyword)
+    search_words = []
 
-        if words:
+    if keyword:
+        search_words = normalize_search_words(keyword)
+
+        if search_words:
             word_conditions = []
 
-            for word in words:
+            for word in search_words:
                 column_conditions = []
 
                 for column in searchable_columns:
@@ -302,8 +353,23 @@ def search_designs(keyword="", category="All", fit="All", season="All"):
     designs = cursor.fetchall()
 
     conn.close()
-    return designs
 
+    if not search_words and category == "All" and fit == "All" and season == "All":
+        return designs
+
+    ranked_designs = sorted(
+        designs,
+        key=lambda design: calculate_design_score(
+            design=design,
+            search_words=search_words,
+            category=category,
+            fit=fit,
+            season=season
+        ),
+        reverse=True
+    )
+
+    return ranked_designs
 
 def get_design_by_id(design_id):
     """
