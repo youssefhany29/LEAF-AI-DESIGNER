@@ -3,10 +3,9 @@ from pathlib import Path
 import streamlit as st
 
 from src.constants import CATEGORIES, FITS, SEASONS
-from src.database.design_repository import (
-    search_designs,
-    insert_generated_brief
-)
+from src.database.design_repository import search_designs
+from src.database.brief_repository import insert_generated_brief
+
 from src.services.design_brief_service import (
     generate_design_brief,
     generate_design_brief_from_library

@@ -1,7 +1,7 @@
 import streamlit as st
 
 from src.config import create_required_folders
-from src.database.design_repository import init_db
+from src.database.schema import init_db
 from src.translations import get_text
 
 

@@ -1,14 +1,15 @@
 from pathlib import Path
 import os
-
+from src.services.prompt_service import improve_prompt, prompt_to_txt
 import streamlit as st
 
-from src.database.design_repository import (
+from src.database.generated_design_repository import (
     insert_generated_design,
     get_generated_designs,
     delete_generated_design,
     update_generated_design_prompt
 )
+from src.services.prompt_service import improve_prompt, prompt_to_txt
 from src.services.image_service import save_generated_image
 from src.ui.shared import setup_page, show_app_header
 from src.translations import get_text
@@ -21,48 +22,6 @@ t = get_text
 
 st.header(t("generated_designs_title"))
 st.write(t("generated_designs_description"))
-
-
-def improve_prompt(prompt):
-    """
-    Improve a basic image prompt using a rule-based prompt enhancer.
-    Later, this can be replaced with a real LLM.
-    """
-    if not prompt:
-        return ""
-
-    extra_details = (
-        " clean studio lighting, realistic fabric texture, high quality fashion product photography, "
-        "front view, centered composition, premium streetwear look, detailed garment shape, "
-        "clear logo placement, professional clothing mockup, no watermark, no copied brand logo"
-    )
-
-    lower_prompt = prompt.lower()
-
-    if "studio" in lower_prompt or "realistic fabric" in lower_prompt:
-        return prompt
-
-    return prompt.strip() + "," + extra_details
-
-
-def prompt_to_txt(title, prompt, notes):
-    """
-    Create TXT content for prompt export.
-    """
-    content = f"""
-LEAF AI Designer - Image Prompt
-
-Title:
-{title}
-
-Prompt:
-{prompt}
-
-Notes:
-{notes if notes else "No notes"}
-"""
-    return content.strip()
-
 
 with st.expander(t("add_generated_design")):
     with st.form("add_generated_design_form"):

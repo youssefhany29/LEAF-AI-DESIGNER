@@ -1,10 +1,10 @@
 import streamlit as st
 
-from src.database.design_repository import (
+from src.database.brief_repository import (
     get_generated_briefs,
-    delete_generated_brief,
-    insert_generated_design
+    delete_generated_brief
 )
+from src.database.generated_design_repository import insert_generated_design
 from src.ui.shared import setup_page, show_app_header
 from src.translations import get_text
 
