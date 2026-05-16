@@ -5,16 +5,17 @@ from PIL import Image
 from sentence_transformers import SentenceTransformer, util
 
 from src.services.search_service import normalize_search_words
-
+from functools import lru_cache
 
 MODEL_NAME = "clip-ViT-B-32"
 
 
+@lru_cache(maxsize=1)
 def load_clip_model():
     """
-    Load CLIP model.
+    Load CLIP model once and reuse it.
 
-    This model can embed text and images into the same vector space.
+    This prevents reloading the model every time we run a search.
     """
     return SentenceTransformer(MODEL_NAME)
 

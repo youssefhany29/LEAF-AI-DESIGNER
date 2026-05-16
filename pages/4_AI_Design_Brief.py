@@ -3,9 +3,12 @@ from pathlib import Path
 import streamlit as st
 
 from src.constants import CATEGORIES, FITS, SEASONS
-from src.database.design_repository import (
-    get_all_designs,
-    search_designs
+from src.services.reference_search_service import (
+    SEARCH_METHOD_CLIP,
+    SEARCH_METHOD_KEYWORD,
+    SEARCH_METHOD_ML,
+    find_reference_designs,
+    get_reference_names
 )
 from src.database.brief_repository import insert_generated_brief
 from src.services.design_brief_service import (
@@ -39,70 +42,6 @@ def get_current_language():
     Return current selected language.
     """
     return st.session_state.get("language", "en")
-
-
-def get_reference_names(matching_designs, limit=5):
-    """
-    Return comma-separated reference names from matching designs.
-    """
-    reference_names = []
-
-    for design in matching_designs[:limit]:
-        reference_names.append(design["product_name"])
-
-    return ", ".join(reference_names)
-
-
-def run_reference_search(
-    user_prompt,
-    keyword,
-    category_filter,
-    fit_filter,
-    season_filter,
-    search_method
-):
-    """
-    Run either keyword search or ML search and return matching designs.
-    """
-    search_keyword = keyword.strip()
-
-    if not search_keyword:
-        search_keyword = user_prompt.strip()
-
-    if search_method == t("ml_search"):
-        all_designs = get_all_designs()
-
-        ml_results = search_designs_with_tfidf(
-            query=search_keyword,
-            designs=all_designs,
-            top_k=10
-        )
-
-        matching_designs = []
-
-        for result in ml_results:
-            design = result["design"]
-
-            if category_filter != "All" and design["category"] != category_filter:
-                continue
-
-            if fit_filter != "All" and design["fit"] != fit_filter:
-                continue
-
-            if season_filter != "All" and design["season"] != season_filter:
-                continue
-
-            matching_designs.append(design)
-
-        return matching_designs
-
-    return search_designs(
-        keyword=search_keyword,
-        category=category_filter,
-        fit=fit_filter,
-        season=season_filter
-    )
-
 
 def show_reference_board(matching_designs):
     """
@@ -190,14 +129,25 @@ if mode == t("generate_from_library"):
         placeholder=t("keyword_placeholder")
     )
 
-    search_method = st.radio(
+    search_method_labels = {
+        t("keyword_search"): SEARCH_METHOD_KEYWORD,
+        t("ml_search"): SEARCH_METHOD_ML,
+        t("clip_image_search"): SEARCH_METHOD_CLIP,
+    }
+
+    selected_search_method_label = st.radio(
         t("search_method"),
-        [
-            t("keyword_search"),
-            t("ml_search")
-        ],
+        list(search_method_labels.keys()),
         horizontal=True
     )
+
+    search_method = search_method_labels[selected_search_method_label]
+
+    if search_method == SEARCH_METHOD_ML:
+        st.info(t("ml_search_note"))
+
+    if search_method == SEARCH_METHOD_CLIP:
+        st.info(t("clip_search_note"))
 
     if search_method == t("ml_search"):
         st.info(t("ml_search_note"))
@@ -206,13 +156,14 @@ if mode == t("generate_from_library"):
         if not user_prompt:
             st.error(t("write_prompt_error"))
         else:
-            matching_designs = run_reference_search(
+            matching_designs = find_reference_designs(
                 user_prompt=user_prompt,
                 keyword=keyword,
                 category_filter=category_filter,
                 fit_filter=fit_filter,
                 season_filter=season_filter,
-                search_method=search_method
+                search_method=search_method,
+                top_k=10
             )
 
             reference_names_text = get_reference_names(matching_designs)

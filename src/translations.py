@@ -216,6 +216,11 @@ Put your images here:
 "clip_search_empty": "No matching image results found.",
 "clip_search_results": "CLIP Image Search Results",
 "clip_search_warning": "First run may take time because the CLIP model needs to load.",
+
+"clip_image_search": "CLIP Image Search",
+"clip_search_note": "CLIP Search uses a deep learning image-text model to find visual references.",
+
+
     },
 
     "ar": {
