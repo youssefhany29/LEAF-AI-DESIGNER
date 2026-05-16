@@ -179,6 +179,19 @@ Put your images here:
 "prompt_improved_success": "Prompt improved successfully ✅",
 "prompt_saved_success": "Prompt changes saved successfully ✅",
 "download_prompt": "Download Prompt",
+
+"analytics_title": "📊 Dataset Analytics",
+"analytics_description": "Understand your clothing reference dataset before using it for AI and machine learning.",
+"total_designs": "Total Designs",
+"unique_categories": "Unique Categories",
+"unique_colors": "Unique Colors",
+"unique_styles": "Unique Styles",
+"top_categories": "Top Categories",
+"top_colors": "Top Colors",
+"top_fits": "Top Fits",
+"top_seasons": "Top Seasons",
+"top_tags": "Top Tags",
+"analytics_empty": "No designs found yet. Add or bulk import designs first.",
     },
 
     "ar": {
@@ -362,6 +375,19 @@ Put your images here:
 "prompt_improved_success": "تم تحسين الوصف بنجاح ✅",
 "prompt_saved_success": "تم حفظ تعديلات الوصف بنجاح ✅",
 "download_prompt": "تحميل الوصف",
+
+"analytics_title": "📊 تحليل بيانات التصاميم",
+"analytics_description": "افهم بيانات مراجع الملابس قبل استخدامها في الذكاء الاصطناعي وتعلم الآلة.",
+"total_designs": "إجمالي التصاميم",
+"unique_categories": "عدد الفئات المختلفة",
+"unique_colors": "عدد الألوان المختلفة",
+"unique_styles": "عدد الستايلات المختلفة",
+"top_categories": "أكثر الفئات تكراراً",
+"top_colors": "أكثر الألوان تكراراً",
+"top_fits": "أكثر القصّات تكراراً",
+"top_seasons": "أكثر المواسم تكراراً",
+"top_tags": "أكثر الكلمات المفتاحية تكراراً",
+"analytics_empty": "لا توجد تصاميم بعد. أضف تصاميم أو استوردها أولاً.",
     }
 }
 

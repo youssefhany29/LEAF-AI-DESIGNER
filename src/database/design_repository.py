@@ -242,3 +242,20 @@ def delete_design(design_id):
 
     connection.commit()
     connection.close()
+
+def get_all_designs():
+    """
+    Return all design references from newest to oldest.
+    """
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT * FROM designs
+        ORDER BY created_at DESC
+    """)
+
+    designs = cursor.fetchall()
+
+    connection.close()
+    return designs
