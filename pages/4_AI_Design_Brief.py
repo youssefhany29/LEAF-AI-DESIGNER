@@ -3,7 +3,10 @@ from pathlib import Path
 import streamlit as st
 
 from src.constants import CATEGORIES, FITS, SEASONS
-from src.database.design_repository import search_designs
+from src.database.design_repository import (
+    search_designs,
+    insert_generated_brief
+)
 from src.services.design_brief_service import (
     generate_design_brief,
     generate_design_brief_from_library
@@ -29,6 +32,13 @@ mode = st.radio(
 )
 
 
+def get_current_language():
+    """
+    Return current selected language.
+    """
+    return st.session_state.get("language", "en")
+
+
 def show_reference_board(matching_designs):
     """
     Show the reference images used to generate the design brief.
@@ -37,7 +47,7 @@ def show_reference_board(matching_designs):
         return
 
     st.subheader(t("reference_board_title"))
-    
+
     max_references_to_show = min(len(matching_designs), 6)
     references = matching_designs[:max_references_to_show]
 
@@ -63,6 +73,24 @@ def show_reference_board(matching_designs):
                     f"{design['style']} | "
                     f"{design['primary_color']}"
                 )
+
+
+def save_last_brief_button():
+    """
+    Show save button for the last generated brief.
+    """
+    if "last_generated_brief" not in st.session_state:
+        return
+
+    if st.button(t("save_generated_brief")):
+        insert_generated_brief(
+            prompt=st.session_state["last_generated_prompt"],
+            brief=st.session_state["last_generated_brief"],
+            language=st.session_state["last_generated_language"],
+            reference_names=st.session_state["last_reference_names"]
+        )
+
+        st.success(t("brief_saved_success"))
 
 
 if mode == t("generate_from_library"):
@@ -114,27 +142,46 @@ if mode == t("generate_from_library"):
                 season=season_filter
             )
 
-            st.write(f"{t('found_designs')} **{len(matching_designs)}** {t('matching_refs_found')}")
+            st.session_state["last_matching_designs"] = matching_designs
 
-            if len(matching_designs) > 0:
-                show_reference_board(matching_designs)
+            reference_names = []
 
-                with st.expander(t("show_references")):
-                    for design in matching_designs[:5]:
-                        st.write(
-                            f"- {design['product_name']} | "
-                            f"{design['category']} | "
-                            f"{design['fit']} | "
-                            f"{design['style']} | "
-                            f"{design['primary_color']}"
-                        )
+            for design in matching_designs[:5]:
+                reference_names.append(design["product_name"])
+
+            reference_names_text = ", ".join(reference_names)
 
             brief = generate_design_brief_from_library(
                 user_prompt=user_prompt,
                 matching_designs=matching_designs
             )
 
-            st.markdown(brief)
+            st.session_state["last_generated_prompt"] = user_prompt
+            st.session_state["last_generated_brief"] = brief
+            st.session_state["last_generated_language"] = get_current_language()
+            st.session_state["last_reference_names"] = reference_names_text
+
+    if "last_generated_brief" in st.session_state:
+        matching_designs = st.session_state.get("last_matching_designs", [])
+
+        st.write(f"{t('found_designs')} **{len(matching_designs)}** {t('matching_refs_found')}")
+
+        if len(matching_designs) > 0:
+            show_reference_board(matching_designs)
+
+            with st.expander(t("show_references")):
+                for design in matching_designs[:5]:
+                    st.write(
+                        f"- {design['product_name']} | "
+                        f"{design['category']} | "
+                        f"{design['fit']} | "
+                        f"{design['style']} | "
+                        f"{design['primary_color']}"
+                    )
+
+        st.markdown(st.session_state["last_generated_brief"])
+
+        save_last_brief_button()
 
 
 elif mode == t("manual_design_brief"):
@@ -233,4 +280,11 @@ elif mode == t("manual_design_brief"):
                 notes=notes
             )
 
-            st.markdown(brief)
+            st.session_state["last_generated_prompt"] = notes if notes else "Manual design brief"
+            st.session_state["last_generated_brief"] = brief
+            st.session_state["last_generated_language"] = get_current_language()
+            st.session_state["last_reference_names"] = "Manual brief"
+
+    if mode == t("manual_design_brief") and "last_generated_brief" in st.session_state:
+        st.markdown(st.session_state["last_generated_brief"])
+        save_last_brief_button()

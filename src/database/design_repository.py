@@ -16,7 +16,7 @@ def get_connection():
 
 def init_db():
     """
-    Create the designs table if it does not exist.
+    Create required database tables if they do not exist.
     """
     conn = get_connection()
     cursor = conn.cursor()
@@ -42,6 +42,17 @@ def init_db():
             tags TEXT,
             notes TEXT,
             image_path TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS generated_briefs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            prompt TEXT NOT NULL,
+            brief TEXT NOT NULL,
+            language TEXT NOT NULL,
+            reference_names TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
@@ -184,6 +195,10 @@ def normalize_search_words(keyword):
         "نضيف": ["clean"],
         "فخم": ["premium"],
         "بيئي": ["eco"],
+        "شعار": ["logo"],
+        "صدر": ["chest"],
+        "ظهر": ["back"],
+        "رسمة": ["graphic"],
     }
 
     stop_words = {
@@ -287,3 +302,63 @@ def search_designs(keyword="", category="All", fit="All", season="All"):
 
     conn.close()
     return designs
+
+
+def insert_generated_brief(prompt, brief, language, reference_names):
+    """
+    Save a generated design brief into the database.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO generated_briefs (
+            prompt,
+            brief,
+            language,
+            reference_names
+        )
+        VALUES (?, ?, ?, ?)
+    """, (
+        prompt,
+        brief,
+        language,
+        reference_names
+    ))
+
+    conn.commit()
+    conn.close()
+
+
+def get_generated_briefs():
+    """
+    Return all saved generated briefs from newest to oldest.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT * FROM generated_briefs
+        ORDER BY created_at DESC
+    """)
+
+    briefs = cursor.fetchall()
+
+    conn.close()
+    return briefs
+
+
+def delete_generated_brief(brief_id):
+    """
+    Delete a saved generated brief.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM generated_briefs
+        WHERE id = ?
+    """, (brief_id,))
+
+    conn.commit()
+    conn.close()

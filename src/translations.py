@@ -26,7 +26,18 @@ Try one of these:
 - Set fit and season to All.
 - Use a simpler prompt.
 """,
+        
 "reference_board_title": "🖼️ Reference Inspiration Board",
+"save_generated_brief": "💾 Save Generated Brief",
+"brief_saved_success": "Generated brief saved successfully ✅",
+"saved_briefs_title": "💾 Saved Design Briefs",
+"no_saved_briefs": "No saved briefs yet.",
+"saved_briefs_count": "saved brief(s)",
+"saved_brief": "Saved Brief",
+"references": "References",
+"show_saved_brief": "Show saved brief",
+"delete_brief": "Delete Brief",
+"brief_deleted_success": "Brief deleted successfully ✅",
         "current_features": "Current Features ✅",
         "feature_add_single": "Add a single clothing reference",
         "feature_bulk_import": "Bulk import many designs from CSV",
@@ -151,6 +162,18 @@ Put your images here:
 - استخدم وصفاً أبسط للتصميم.
 """,
 "reference_board_title": "🖼️ لوحة مراجع الإلهام",
+
+"save_generated_brief": "💾 حفظ فكرة التصميم",
+"brief_saved_success": "تم حفظ فكرة التصميم بنجاح ✅",
+"saved_briefs_title": "💾 أفكار التصميم المحفوظة",
+"no_saved_briefs": "لا توجد أفكار تصميم محفوظة بعد.",
+"saved_briefs_count": "فكرة محفوظة",
+"saved_brief": "فكرة محفوظة",
+"references": "المراجع",
+"show_saved_brief": "عرض فكرة التصميم المحفوظة",
+"delete_brief": "حذف الفكرة",
+"brief_deleted_success": "تم حذف الفكرة بنجاح ✅",
+
         "current_features": "الميزات الحالية ✅",
         "feature_add_single": "إضافة مرجع تصميم واحد",
         "feature_bulk_import": "استيراد عدد كبير من التصاميم من ملف CSV",
