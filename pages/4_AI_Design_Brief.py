@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import streamlit as st
 
 from src.constants import CATEGORIES, FITS, SEASONS
@@ -25,6 +27,42 @@ mode = st.radio(
         t("manual_design_brief")
     ]
 )
+
+
+def show_reference_board(matching_designs):
+    """
+    Show the reference images used to generate the design brief.
+    """
+    if len(matching_designs) == 0:
+        return
+
+    st.subheader(t("reference_board_title"))
+    
+    max_references_to_show = min(len(matching_designs), 6)
+    references = matching_designs[:max_references_to_show]
+
+    columns_per_row = 3
+
+    for start_index in range(0, len(references), columns_per_row):
+        row_items = references[start_index:start_index + columns_per_row]
+        columns = st.columns(columns_per_row)
+
+        for column, design in zip(columns, row_items):
+            with column:
+                image_path = design["image_path"]
+
+                if image_path and Path(image_path).exists():
+                    st.image(image_path, width="stretch")
+                else:
+                    st.info(t("no_image_uploaded"))
+
+                st.markdown(f"**{design['product_name']}**")
+                st.caption(
+                    f"{design['category']} | "
+                    f"{design['fit']} | "
+                    f"{design['style']} | "
+                    f"{design['primary_color']}"
+                )
 
 
 if mode == t("generate_from_library"):
@@ -79,6 +117,8 @@ if mode == t("generate_from_library"):
             st.write(f"{t('found_designs')} **{len(matching_designs)}** {t('matching_refs_found')}")
 
             if len(matching_designs) > 0:
+                show_reference_board(matching_designs)
+
                 with st.expander(t("show_references")):
                     for design in matching_designs[:5]:
                         st.write(

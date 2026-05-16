@@ -26,6 +26,7 @@ Try one of these:
 - Set fit and season to All.
 - Use a simpler prompt.
 """,
+"reference_board_title": "🖼️ Reference Inspiration Board",
         "current_features": "Current Features ✅",
         "feature_add_single": "Add a single clothing reference",
         "feature_bulk_import": "Bulk import many designs from CSV",
@@ -149,6 +150,7 @@ Put your images here:
 - اجعل القَصّة والموسم على الكل.
 - استخدم وصفاً أبسط للتصميم.
 """,
+"reference_board_title": "🖼️ لوحة مراجع الإلهام",
         "current_features": "الميزات الحالية ✅",
         "feature_add_single": "إضافة مرجع تصميم واحد",
         "feature_bulk_import": "استيراد عدد كبير من التصاميم من ملف CSV",
