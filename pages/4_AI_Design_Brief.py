@@ -3,13 +3,16 @@ from pathlib import Path
 import streamlit as st
 
 from src.constants import CATEGORIES, FITS, SEASONS
-from src.database.design_repository import search_designs
+from src.database.design_repository import (
+    get_all_designs,
+    search_designs
+)
 from src.database.brief_repository import insert_generated_brief
-
 from src.services.design_brief_service import (
     generate_design_brief,
     generate_design_brief_from_library
 )
+from src.services.ml_search_service import search_designs_with_tfidf
 from src.ui.shared import setup_page, show_app_header
 from src.translations import get_text
 
@@ -38,6 +41,69 @@ def get_current_language():
     return st.session_state.get("language", "en")
 
 
+def get_reference_names(matching_designs, limit=5):
+    """
+    Return comma-separated reference names from matching designs.
+    """
+    reference_names = []
+
+    for design in matching_designs[:limit]:
+        reference_names.append(design["product_name"])
+
+    return ", ".join(reference_names)
+
+
+def run_reference_search(
+    user_prompt,
+    keyword,
+    category_filter,
+    fit_filter,
+    season_filter,
+    search_method
+):
+    """
+    Run either keyword search or ML search and return matching designs.
+    """
+    search_keyword = keyword.strip()
+
+    if not search_keyword:
+        search_keyword = user_prompt.strip()
+
+    if search_method == t("ml_search"):
+        all_designs = get_all_designs()
+
+        ml_results = search_designs_with_tfidf(
+            query=search_keyword,
+            designs=all_designs,
+            top_k=10
+        )
+
+        matching_designs = []
+
+        for result in ml_results:
+            design = result["design"]
+
+            if category_filter != "All" and design["category"] != category_filter:
+                continue
+
+            if fit_filter != "All" and design["fit"] != fit_filter:
+                continue
+
+            if season_filter != "All" and design["season"] != season_filter:
+                continue
+
+            matching_designs.append(design)
+
+        return matching_designs
+
+    return search_designs(
+        keyword=search_keyword,
+        category=category_filter,
+        fit=fit_filter,
+        season=season_filter
+    )
+
+
 def show_reference_board(matching_designs):
     """
     Show the reference images used to generate the design brief.
@@ -49,7 +115,6 @@ def show_reference_board(matching_designs):
 
     max_references_to_show = min(len(matching_designs), 6)
     references = matching_designs[:max_references_to_show]
-
     columns_per_row = 3
 
     for start_index in range(0, len(references), columns_per_row):
@@ -125,36 +190,39 @@ if mode == t("generate_from_library"):
         placeholder=t("keyword_placeholder")
     )
 
+    search_method = st.radio(
+        t("search_method"),
+        [
+            t("keyword_search"),
+            t("ml_search")
+        ],
+        horizontal=True
+    )
+
+    if search_method == t("ml_search"):
+        st.info(t("ml_search_note"))
+
     if st.button(t("generate_button")):
         if not user_prompt:
             st.error(t("write_prompt_error"))
         else:
-            search_keyword = keyword.strip()
-
-            if not search_keyword:
-                search_keyword = user_prompt.strip()
-
-            matching_designs = search_designs(
-                keyword=search_keyword,
-                category=category_filter,
-                fit=fit_filter,
-                season=season_filter
+            matching_designs = run_reference_search(
+                user_prompt=user_prompt,
+                keyword=keyword,
+                category_filter=category_filter,
+                fit_filter=fit_filter,
+                season_filter=season_filter,
+                search_method=search_method
             )
 
-            st.session_state["last_matching_designs"] = matching_designs
-
-            reference_names = []
-
-            for design in matching_designs[:5]:
-                reference_names.append(design["product_name"])
-
-            reference_names_text = ", ".join(reference_names)
+            reference_names_text = get_reference_names(matching_designs)
 
             brief = generate_design_brief_from_library(
                 user_prompt=user_prompt,
                 matching_designs=matching_designs
             )
 
+            st.session_state["last_matching_designs"] = matching_designs
             st.session_state["last_generated_prompt"] = user_prompt
             st.session_state["last_generated_brief"] = brief
             st.session_state["last_generated_language"] = get_current_language()
@@ -179,7 +247,6 @@ if mode == t("generate_from_library"):
                     )
 
         st.markdown(st.session_state["last_generated_brief"])
-
         save_last_brief_button()
 
 
@@ -284,6 +351,6 @@ elif mode == t("manual_design_brief"):
             st.session_state["last_generated_language"] = get_current_language()
             st.session_state["last_reference_names"] = "Manual brief"
 
-    if mode == t("manual_design_brief") and "last_generated_brief" in st.session_state:
+    if "last_generated_brief" in st.session_state:
         st.markdown(st.session_state["last_generated_brief"])
         save_last_brief_button()

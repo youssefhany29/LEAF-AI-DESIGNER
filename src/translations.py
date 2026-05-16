@@ -202,6 +202,11 @@ Put your images here:
 "ml_search_empty": "No matching results found.",
 "ml_search_results": "ML Search Results",
 "similarity_score": "Similarity Score",
+
+"search_method": "Search Method",
+"keyword_search": "Keyword Search",
+"ml_search": "ML Search",
+"ml_search_note": "ML Search uses TF-IDF similarity to find closer references.",
     },
 
     "ar": {
@@ -408,6 +413,11 @@ Put your images here:
 "ml_search_empty": "لم يتم العثور على نتائج مطابقة.",
 "ml_search_results": "نتائج البحث الذكي",
 "similarity_score": "درجة التشابه",
+
+"search_method": "طريقة البحث",
+"keyword_search": "بحث بالكلمات",
+"ml_search": "بحث ذكي",
+"ml_search_note": "البحث الذكي يستخدم TF-IDF لاختيار مراجع أقرب للوصف.",
     }
 }
 
