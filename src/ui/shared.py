@@ -32,117 +32,137 @@ def is_arabic():
 def apply_language_direction():
     """
     Apply clean Arabic RTL or English LTR layout.
+    Keep Streamlit sidebar/navigation stable on mobile.
     """
     if is_arabic():
-        st.markdown(
-            """
-            <style>
-            .stApp {
-                direction: rtl;
-            }
-
-            .main .block-container {
-                direction: rtl;
-                text-align: right;
-                max-width: 1150px;
-                padding-top: 3rem;
-            }
-
-            section[data-testid="stSidebar"] {
-                direction: rtl;
-                text-align: right;
-            }
-
-            section[data-testid="stSidebar"] * {
-                text-align: right;
-            }
-
-            div[data-testid="stMarkdownContainer"] {
-                direction: rtl;
-                text-align: right;
-            }
-
-            div[data-testid="stMarkdownContainer"] ul {
-                direction: rtl;
-                text-align: right;
-                list-style-position: inside;
-            }
-
-            label, p, h1, h2, h3, h4, h5, h6 {
-                direction: rtl;
-                text-align: right;
-            }
-
-            input, textarea {
-                direction: rtl !important;
-                text-align: right !important;
-            }
-
-            div[data-baseweb="select"] {
-                direction: rtl;
-                text-align: right;
-            }
-
-            div[data-baseweb="select"] * {
-                text-align: right;
-            }
-
-            .stButton > button {
-                direction: rtl;
-                text-align: center;
-            }
-
-            code, pre, .stCode {
-                direction: ltr !important;
-                text-align: left !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
+        direction = "rtl"
+        text_align = "right"
     else:
-        st.markdown(
-            """
-            <style>
-            .stApp {
-                direction: ltr;
-            }
+        direction = "ltr"
+        text_align = "left"
 
-            .main .block-container {
-                direction: ltr;
-                text-align: left;
-                max-width: 1150px;
-                padding-top: 3rem;
-            }
+    st.markdown(
+        f"""
+        <style>
+        /* Main content direction only */
+        .main .block-container {{
+            direction: {direction};
+            text-align: {text_align};
+            max-width: 1100px;
+            padding-top: 2rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }}
 
-            section[data-testid="stSidebar"] {
-                direction: ltr;
-                text-align: left;
-            }
+        /* Text elements */
+        .main .block-container h1,
+        .main .block-container h2,
+        .main .block-container h3,
+        .main .block-container h4,
+        .main .block-container h5,
+        .main .block-container h6,
+        .main .block-container p,
+        .main .block-container label,
+        .main .block-container div[data-testid="stMarkdownContainer"] {{
+            direction: {direction};
+            text-align: {text_align};
+        }}
 
-            div[data-testid="stMarkdownContainer"] {
-                direction: ltr;
-                text-align: left;
-            }
+        /* Lists */
+        .main .block-container ul,
+        .main .block-container ol {{
+            direction: {direction};
+            text-align: {text_align};
+            list-style-position: inside;
+        }}
 
-            label, p, h1, h2, h3, h4, h5, h6 {
-                direction: ltr;
-                text-align: left;
-            }
+        /* Inputs */
+        .main .block-container input,
+        .main .block-container textarea {{
+            direction: {direction} !important;
+            text-align: {text_align} !important;
+        }}
 
-            input, textarea {
-                direction: ltr !important;
-                text-align: left !important;
-            }
+        /* Select boxes in main area only */
+        .main .block-container div[data-baseweb="select"] {{
+            direction: {direction};
+            text-align: {text_align};
+        }}
 
-            code, pre, .stCode {
-                direction: ltr !important;
-                text-align: left !important;
-            }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
+        /* Keep code and CSV examples readable */
+        code, pre, .stCode {{
+            direction: ltr !important;
+            text-align: left !important;
+            white-space: pre-wrap !important;
+            word-break: break-word !important;
+        }}
+
+        /* Sidebar: do NOT force full RTL on all internals */
+        section[data-testid="stSidebar"] {{
+            direction: {direction};
+        }}
+
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] p,
+        section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {{
+            text-align: {text_align};
+        }}
+
+        /* Mobile fixes */
+        @media (max-width: 768px) {{
+            .main .block-container {{
+                padding-left: 1rem;
+                padding-right: 1rem;
+                padding-top: 1rem;
+                max-width: 100%;
+                overflow-x: hidden;
+            }}
+
+            .main .block-container h1 {{
+                font-size: 2rem !important;
+                line-height: 1.25 !important;
+                word-break: normal !important;
+                overflow-wrap: break-word !important;
+            }}
+
+            .main .block-container h2 {{
+                font-size: 1.6rem !important;
+                line-height: 1.3 !important;
+                word-break: normal !important;
+                overflow-wrap: break-word !important;
+            }}
+
+            .main .block-container h3 {{
+                font-size: 1.25rem !important;
+                line-height: 1.35 !important;
+            }}
+
+            .main .block-container p,
+            .main .block-container li,
+            .main .block-container label {{
+                font-size: 1rem !important;
+                line-height: 1.6 !important;
+            }}
+
+            /* Prevent long text from creating horizontal overflow */
+            .main .block-container * {{
+                max-width: 100%;
+                overflow-wrap: break-word;
+            }}
+
+            /* Make widgets fit mobile */
+            .stTextInput,
+            .stTextArea,
+            .stSelectbox,
+            .stFileUploader,
+            .stButton {{
+                width: 100% !important;
+            }}
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 
 def language_selector():
