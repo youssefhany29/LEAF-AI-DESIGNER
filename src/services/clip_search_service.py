@@ -1,21 +1,20 @@
 from pathlib import Path
 
 import pandas as pd
+import streamlit as st
 from PIL import Image
 from sentence_transformers import SentenceTransformer, util
 
 from src.services.search_service import normalize_search_words
-from functools import lru_cache
+
 
 MODEL_NAME = "clip-ViT-B-32"
 
 
-@lru_cache(maxsize=1)
+@st.cache_resource
 def load_clip_model():
     """
-    Load CLIP model once and reuse it.
-
-    This prevents reloading the model every time we run a search.
+    Load CLIP model once and reuse it across Streamlit reruns.
     """
     return SentenceTransformer(MODEL_NAME)
 
@@ -47,14 +46,38 @@ def get_valid_image_designs(designs):
     return valid_designs
 
 
-def encode_design_images(model, designs):
+def build_image_cache_key(designs):
     """
-    Encode design images using CLIP.
+    Build a stable cache key based on image paths and modification times.
+
+    If an image changes, the cache key changes too.
     """
-    images = []
+    key_parts = []
 
     for design in designs:
-        image = Image.open(design["image_path"]).convert("RGB")
+        image_path = design["image_path"]
+
+        if image_path and Path(image_path).exists():
+            path = Path(image_path)
+            modified_time = path.stat().st_mtime
+            key_parts.append(f"{design['id']}|{path}|{modified_time}")
+
+    return "||".join(key_parts)
+
+
+@st.cache_data(show_spinner=False)
+def encode_image_paths_cached(image_paths, cache_key):
+    """
+    Encode images using CLIP and cache the embeddings.
+
+    cache_key is only used to invalidate cache when image files change.
+    """
+    model = load_clip_model()
+
+    images = []
+
+    for image_path in image_paths:
+        image = Image.open(image_path).convert("RGB")
         images.append(image)
 
     image_embeddings = model.encode(
@@ -85,10 +108,15 @@ def search_images_with_clip(query, designs, top_k=10):
         show_progress_bar=False
     )
 
-    image_embeddings = encode_design_images(model, valid_designs)
+    image_paths = [design["image_path"] for design in valid_designs]
+    cache_key = build_image_cache_key(valid_designs)
+
+    image_embeddings = encode_image_paths_cached(
+        image_paths=image_paths,
+        cache_key=cache_key
+    )
 
     scores = util.cos_sim(text_embedding, image_embeddings)[0]
-
     top_results = scores.topk(k=min(top_k, len(valid_designs)))
 
     results = []
@@ -100,6 +128,14 @@ def search_images_with_clip(query, designs, top_k=10):
         })
 
     return results
+
+
+def clear_clip_cache():
+    """
+    Clear cached CLIP model and image embeddings.
+    """
+    load_clip_model.clear()
+    encode_image_paths_cached.clear()
 
 
 def clip_results_to_dataframe(results):

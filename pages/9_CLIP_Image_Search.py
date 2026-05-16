@@ -5,7 +5,8 @@ import streamlit as st
 from src.database.design_repository import get_all_designs
 from src.services.clip_search_service import (
     search_images_with_clip,
-    clip_results_to_dataframe
+    clip_results_to_dataframe,
+    clear_clip_cache
 )
 from src.translations import get_text
 from src.ui.shared import setup_page, show_app_header
@@ -19,7 +20,9 @@ t = get_text
 st.header(t("clip_search_title"))
 st.write(t("clip_search_description"))
 st.info(t("clip_search_warning"))
-
+if st.button(t("clear_clip_cache")):
+    clear_clip_cache()
+    st.success(t("clip_cache_cleared"))
 designs = get_all_designs()
 
 if len(designs) == 0:

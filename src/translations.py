@@ -220,6 +220,9 @@ Put your images here:
 "clip_image_search": "CLIP Image Search",
 "clip_search_note": "CLIP Search uses a deep learning image-text model to find visual references.",
 
+"clear_clip_cache": "Clear CLIP Cache",
+"clip_cache_cleared": "CLIP cache cleared successfully ✅",
+
 
     },
 
@@ -441,6 +444,9 @@ Put your images here:
 "clip_search_empty": "لم يتم العثور على نتائج صور مطابقة.",
 "clip_search_results": "نتائج بحث الصور باستخدام CLIP",
 "clip_search_warning": "أول تشغيل قد يستغرق وقتاً لأن نموذج CLIP يحتاج إلى التحميل.",
+
+"clear_clip_cache": "مسح ذاكرة CLIP المؤقتة",
+"clip_cache_cleared": "تم مسح ذاكرة CLIP المؤقتة بنجاح ✅",
     }
 }
 
